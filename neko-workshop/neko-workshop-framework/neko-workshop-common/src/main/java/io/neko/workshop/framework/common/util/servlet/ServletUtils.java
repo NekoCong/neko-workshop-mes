@@ -1,0 +1,95 @@
+package io.neko.workshop.framework.common.util.servlet;
+
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.servlet.JakartaServletUtil;
+import io.neko.workshop.framework.common.util.json.JsonUtils;
+import org.springframework.http.MediaType;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+
+/**
+ * 客户端工具类
+ *
+ * @author 灵喵工坊
+ */
+public class ServletUtils {
+
+    /**
+     * 返回 JSON 字符串
+     *
+     * @param response 响应
+     * @param object 对象，会序列化成 JSON 字符串
+     */
+    public static void writeJSON(HttpServletResponse response, Object object) {
+        String content = JsonUtils.toJsonString(object);
+        // 注意：Spring 6 起 APPLICATION_JSON_UTF8_VALUE 已移除，这里显式指定 UTF-8，避免中文乱码
+        JakartaServletUtil.write(response, content, MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8");
+    }
+
+    /**
+     * 返回附件
+     *
+     * @param response 响应
+     * @param filename 文件名
+     * @param content 附件内容
+     * @throws IOException
+     */
+    public static void writeAttachment(HttpServletResponse response, String filename, byte[] content) throws IOException {
+        // 设置 header 和 contentType
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        // 输出附件
+        IoUtil.write(response.getOutputStream(), false, content);
+    }
+
+    /**
+     * @param request 请求
+     * @return ua
+     */
+    public static String getUserAgent(HttpServletRequest request) {
+        String ua = request.getHeader("User-Agent");
+        return ua != null ? ua : "";
+    }
+
+    /**
+     * 获得请求
+     *
+     * @return HttpServletRequest
+     */
+    public static HttpServletRequest getRequest() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (!(requestAttributes instanceof ServletRequestAttributes)) {
+            return null;
+        }
+        return ((ServletRequestAttributes) requestAttributes).getRequest();
+    }
+
+    public static String getUserAgent() {
+        HttpServletRequest request = getRequest();
+        if (request == null) {
+            return null;
+        }
+        return getUserAgent(request);
+    }
+
+    public static String getClientIP() {
+        HttpServletRequest request = getRequest();
+        if (request == null) {
+            return null;
+        }
+        return JakartaServletUtil.getClientIP(request);
+    }
+
+    public static boolean isJsonRequest(ServletRequest request) {
+        return StrUtil.startWithIgnoreCase(request.getContentType(), MediaType.APPLICATION_JSON_VALUE);
+    }
+
+}

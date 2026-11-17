@@ -1,0 +1,2 @@
+io.neko.workshop.framework.datasource.config.NekoWorksDataSourceAutoConfiguration
+io.neko.workshop.framework.mybatis.config.NekoWorksMybatisAutoConfiguration

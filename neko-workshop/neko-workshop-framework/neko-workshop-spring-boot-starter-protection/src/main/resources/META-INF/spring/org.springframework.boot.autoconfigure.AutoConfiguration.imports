@@ -1,0 +1,2 @@
+io.neko.workshop.framework.idempotent.config.NekoWorksIdempotentConfiguration
+io.neko.workshop.framework.lock4j.config.NekoWorksLock4jConfiguration

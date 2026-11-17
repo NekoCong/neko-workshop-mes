@@ -1,0 +1,2 @@
+io.neko.workshop.framework.tracer.config.NekoWorksTracerAutoConfiguration
+io.neko.workshop.framework.tracer.config.NekoWorksMetricsAutoConfiguration

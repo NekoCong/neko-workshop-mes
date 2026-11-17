@@ -1,0 +1,87 @@
+# 本地开发基础设施编排（全部使用 Docker Desktop 中已有镜像，不会联网拉取）
+#
+# 包含：
+#   mysql  8.0.39  -> localhost:3307  库 mes-duiwai-test  root/123456（首次启动自动导入全量 SQL）
+#   redis  8-alpine-> localhost:6379  密码 123456
+#   minio（可选）  -> localhost:9000（API）/ 9001（控制台） admin/admin111
+#
+# 后端、前端仍建议在宿主机运行（后端需 JDK 25 + Spring Boot 4.1.1；本编排仅提供 MySQL/Redis/MinIO）：
+#   后端：java -jar neko-workshop-mes-server/neko-workshop-server/target/neko-workshop-server.jar   （JDK 25）
+#   前端：cd neko-workshop-mes-front && npx pnpm@7.33.6 dev
+#
+# 用法：
+#   docker compose -f docker-compose.local.yml up -d
+#   docker compose -f docker-compose.local.yml ps
+#   docker compose -f docker-compose.local.yml logs -f mysql
+#   可选 MinIO：docker compose -f docker-compose.local.yml --profile minio up -d
+#   停止（保留数据）：docker compose -f docker-compose.local.yml down
+#   停止并清空数据（下次启动会重新导入 SQL）：docker compose -f docker-compose.local.yml down -v
+
+name: mes-local
+
+services:
+  mysql:
+    # 本机已有镜像，等同于 mysql:8.0.39
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/mysql:8.0.39
+    container_name: mes-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: mes-duiwai-test
+      TZ: Asia/Shanghai
+    ports:
+      - "3307:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_general_ci
+      - "--sql-mode=IGNORE_SPACE,NO_ENGINE_SUBSTITUTION"
+      - --max-connections=1000
+    volumes:
+      - mes-mysql-data:/var/lib/mysql
+      # 仅当数据卷为空（首次启动）时执行，自动导入 MES 全量数据
+      - ./neko-workshop-mes-server/sql/mes-duiwai-test.sql:/docker-entrypoint-initdb.d/01-mes.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 90s
+
+  redis:
+    # 本机已有镜像，等同于 redis:8-alpine
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/redis:8-alpine
+    container_name: mes-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--port", "6379", "--requirepass", "123456", "--appendonly", "yes"]
+    volumes:
+      - mes-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "123456", "--no-auth-warning", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # 可选：文件上传需要。默认不启动。
+  minio:
+    profiles: ["minio"]
+    # 本机已有镜像
+    image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+    container_name: mes-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # 控制台
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin111
+      TZ: Asia/Shanghai
+    command: ["server", "/data", "--console-address", ":9001"]
+    volumes:
+      - mes-minio-data:/data
+
+volumes:
+  mes-mysql-data:
+  mes-redis-data:
+  mes-minio-data:

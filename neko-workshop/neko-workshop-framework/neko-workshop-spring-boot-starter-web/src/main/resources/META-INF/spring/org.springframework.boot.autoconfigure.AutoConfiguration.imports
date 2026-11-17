@@ -1,0 +1,6 @@
+io.neko.workshop.framework.apilog.config.NekoWorksApiLogAutoConfiguration
+io.neko.workshop.framework.jackson.config.NekoWorksJacksonAutoConfiguration
+com.github.xiaoymin.knife4j.spring.configuration.Knife4jAutoConfiguration
+io.neko.workshop.framework.swagger.config.NekoWorksSwaggerAutoConfiguration
+io.neko.workshop.framework.web.config.NekoWorksWebAutoConfiguration
+io.neko.workshop.framework.xss.config.NekoWorksXssAutoConfiguration

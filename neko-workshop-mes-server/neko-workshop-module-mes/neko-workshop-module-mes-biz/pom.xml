@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>io.neko.workshop.boot</groupId>
+        <artifactId>neko-workshop-module-mes</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>neko-workshop-module-mes-biz</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>
+        mes 模块
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.neko.workshop.boot</groupId>
+            <artifactId>neko-workshop-module-mes-api</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- 业务组件 -->
+        <dependency>
+            <groupId>io.neko.workshop.boot</groupId>
+            <artifactId>neko-workshop-spring-boot-starter-biz-operatelog</artifactId>
+        </dependency>
+
+        <!-- Web 相关 -->
+        <dependency>
+            <groupId>io.neko.workshop.boot</groupId>
+            <artifactId>neko-workshop-spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.neko.workshop.boot</groupId>
+            <artifactId>neko-workshop-spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- DB 相关 -->
+        <dependency>
+            <groupId>io.neko.workshop.boot</groupId>
+            <artifactId>neko-workshop-spring-boot-starter-mybatis</artifactId>
+        </dependency>
+
+        <!-- Test 测试相关 -->
+        <dependency>
+            <groupId>io.neko.workshop.boot</groupId>
+            <artifactId>neko-workshop-spring-boot-starter-test</artifactId>
+        </dependency>
+
+        <!-- 工具类相关 -->
+        <dependency>
+            <groupId>io.neko.workshop.boot</groupId>
+            <artifactId>neko-workshop-spring-boot-starter-excel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.neko.workshop.boot</groupId>
+            <artifactId>neko-workshop-module-infra-biz</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
