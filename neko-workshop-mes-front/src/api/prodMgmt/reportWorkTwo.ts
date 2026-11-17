@@ -49,7 +49,9 @@ export const deleteProductionListInfo = async (params: Number | String) => {
 // 获取暂停原因数据
 export const getStopReason = async () => {
   return await request.get({
-    url: `${import.meta.env.VITE_API_URL_ADMIN}/system/dict-data/list-by-type?dictType=reason_for_suspension`
+    url: `${
+      import.meta.env.VITE_API_URL_ADMIN
+    }/system/dict-data/list-by-type?dictType=reason_for_suspension`
   })
 }
 

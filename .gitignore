@@ -22,6 +22,12 @@
 /部署和文档/data/server/*.jar
 /部署和文档/data/server/java.security
 
+# ===== 生产部署产物（体积大，构建时生成，不入库） =====
+/deploy-prod/server/*.jar
+/deploy-prod/front/dist/
+/deploy-prod/sql/*.sql
+/dist-upload.tar.gz
+
 # ===== 部署方案 / 图片 / 文档：暂不入库 =====
 /部署和文档/
 /images/
