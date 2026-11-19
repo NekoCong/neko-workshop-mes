@@ -119,7 +119,35 @@ export const generateRoute = (routes: AppCustomRouteRecordRaw[]): AppRouteRecord
     }
     res.push(data as AppRouteRecordRaw)
   }
-  return res
+  return dedupeRouteNames(res)
+}
+
+/**
+ * vue-router 4.6+ 要求全局路由 name 唯一，后端菜单数据若出现 path 重复
+ * （如 file/log/model/task 各有两个菜单），会生成重名路由，在 addRoute 时
+ * 直接抛错，导致应用卡在 loading 动画。这里对重名路由追加数字后缀兜底。
+ * 项目内跳转均使用 path，不依赖 name，因此改名不影响导航。
+ */
+const dedupeRouteNames = (routes: AppRouteRecordRaw[]): AppRouteRecordRaw[] => {
+  const seen = new Set<string>()
+  const walk = (list: AppRouteRecordRaw[]) => {
+    for (const route of list) {
+      if (route.name) {
+        let name = route.name as string
+        let i = 2
+        while (seen.has(name)) {
+          name = `${route.name}${i++}`
+        }
+        seen.add(name)
+        route.name = name
+      }
+      if (route.children?.length) {
+        walk(route.children as AppRouteRecordRaw[])
+      }
+    }
+  }
+  walk(routes)
+  return routes
 }
 export const getRedirect = (parentPath: string, children: AppCustomRouteRecordRaw[]) => {
   if (!children || children.length == 0) {
