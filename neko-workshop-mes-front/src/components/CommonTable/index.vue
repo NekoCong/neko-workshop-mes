@@ -180,7 +180,7 @@ watch(
   (newValue) => {
     pagination.value.currentPage = newValue
 
-    emit('pagination-change', pagination)
+    emit('pagination-change', pagination.value)
   }
 )
 watch(
@@ -189,7 +189,7 @@ watch(
     pagination.value.pageSize = newValue
 
     pagination.value.currentPage = 1
-    emit('pagination-change', pagination)
+    emit('pagination-change', pagination.value)
   }
 )
 

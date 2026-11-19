@@ -215,7 +215,7 @@
 
 <script setup lang="ts">
 import download from '@/utils/download'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed, watch } from 'vue'
 import CommonSearch from '@/components/CommonSearch/index.vue'
 import CommonTable from '@/components/CommonTable/index.vue'
 import {
@@ -323,12 +323,10 @@ const isShowOperationColumns = computed(() => {
 })
 
 // 计算总数量
-const quantityReduce = computed(() => {
-  return (ruleFormData.value.quantity = purchaseReturnSelectList.value.reduce(
-    (total, item) => total + item.amount,
-    0
-  ))
-})
+const quantityReduceValue = computed(() =>
+  purchaseReturnSelectList.value.reduce((total, item) => total + item.amount, 0)
+)
+const quantityReduce = computed(() => quantityReduceValue.value)
 
 // 计算总金额
 const totalAmountReduce = (value) => {
@@ -336,12 +334,26 @@ const totalAmountReduce = (value) => {
 }
 
 // 计算总价格
-const totalPriceReduce = computed(() => {
-  return (ruleFormData.value.totalPrice = purchaseReturnSelectList.value.reduce(
-    (total, item) => total + item.totalPrice,
-    0
-  ))
-})
+const totalPriceReduceValue = computed(() =>
+  purchaseReturnSelectList.value.reduce((total, item) => total + item.totalPrice, 0)
+)
+const totalPriceReduce = computed(() => totalPriceReduceValue.value)
+
+// 保持原有行为：把汇总值同步回表单数据（副作用从 computed 中移出）
+watch(
+  quantityReduceValue,
+  (val) => {
+    ruleFormData.value.quantity = val
+  },
+  { immediate: true }
+)
+watch(
+  totalPriceReduceValue,
+  (val) => {
+    ruleFormData.value.totalPrice = val
+  },
+  { immediate: true }
+)
 
 const handleSelectSubmit = () => {
   detailSelectInfo.value.forEach((item2) => {

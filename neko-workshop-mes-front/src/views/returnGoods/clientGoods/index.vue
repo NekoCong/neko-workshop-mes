@@ -155,7 +155,7 @@
 
 <script setup lang="ts">
 import download from '@/utils/download'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed, watch } from 'vue'
 import CommonSearch from '@/components/CommonSearch/index.vue'
 import CommonTable from '@/components/CommonTable/index.vue'
 import { searchConditions, tableColumns } from './data'
@@ -265,19 +265,36 @@ const boxInformation = (value, index) => {
   tableReturnList.value[index.$index].barCode = value.barCode
 }
 // 总净重
-const totalWeight = computed(
-  () =>
-    (ruleFormData.value.weight = tableReturnList.value.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.weight
-    }, 0))
+const totalWeightValue = computed(() =>
+  tableReturnList.value.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.weight
+  }, 0)
 )
+const totalWeight = computed(() => totalWeightValue.value)
 
 // 总金额
-const totalMoney = computed(
-  () =>
-    (ruleFormData.value.weight = tableReturnList.value.reduce((accumulator, currentValue) => {
-      return accumulator + currentValue.totalPrice
-    }, 0))
+const totalMoneyValue = computed(() =>
+  tableReturnList.value.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.totalPrice
+  }, 0)
+)
+const totalMoney = computed(() => totalMoneyValue.value)
+
+// 保持原有行为：把汇总值同步回表单数据（副作用从 computed 中移出）
+watch(
+  totalWeightValue,
+  (val) => {
+    ruleFormData.value.weight = val
+  },
+  { immediate: true }
+)
+// 注意：原代码此处同样写入 ruleFormData.weight（疑似历史复制粘贴问题，保持原行为未改动）
+watch(
+  totalMoneyValue,
+  (val) => {
+    ruleFormData.value.weight = val
+  },
+  { immediate: true }
 )
 
 // 搜索功能

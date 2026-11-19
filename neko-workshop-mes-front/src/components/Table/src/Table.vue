@@ -55,6 +55,9 @@ export default defineComponent({
     // 注册
     onMounted(() => {
       const tableRef = unref(elTableRef)
+      // 第二个参数按设计传 ref 本身（useTable 中会赋值给 elTableRef.value），
+      // 此处并非读取 ref 的值，故对 lint 规则显式豁免
+      // eslint-disable-next-line vue/no-ref-as-operand
       emit('register', tableRef?.$parent, elTableRef)
     })
 
