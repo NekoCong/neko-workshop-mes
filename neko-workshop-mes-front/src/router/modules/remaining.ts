@@ -40,7 +40,8 @@ const remainingRouter: AppRouteRecordRaw[] = [
     children: [
       {
         path: '/redirect/:path(.*)',
-        name: 'Redirect',
+        // 嵌套路由的 name 必须唯一，不能与父路由同名（vue-router 4.6+ 会直接抛错）
+        name: 'RedirectInner',
         component: () => import('@/views/redirect/Redirect.vue'),
         meta: {}
       }
