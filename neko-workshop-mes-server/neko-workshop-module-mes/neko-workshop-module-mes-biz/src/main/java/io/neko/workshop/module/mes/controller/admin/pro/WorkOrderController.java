@@ -128,8 +128,15 @@ public class WorkOrderController {
         PageResult<WorkOrder> pageResult = workorderService.getWorkOrderPage(workOrderPage);
         List<WorkOrder> workOrderList = pageResult.getList();
         for(WorkOrder list:workOrderList){
-            list.setRequestDate(list.getRequestDate().substring(0, 10));
-            list.setProduceDate(list.getProduceDate().substring(0, 10));
+            // 日期字段可能为空，截取前需防空，避免列表接口 500
+            String requestDate = list.getRequestDate();
+            if (StringUtils.isNotNull(requestDate) && requestDate.length() >= 10) {
+                list.setRequestDate(requestDate.substring(0, 10));
+            }
+            String produceDate = list.getProduceDate();
+            if (StringUtils.isNotNull(produceDate) && produceDate.length() >= 10) {
+                list.setProduceDate(produceDate.substring(0, 10));
+            }
         }
         workOrderList.sort(Comparator.comparing(this::getOrderStatusValue));
         return success(pageResult);

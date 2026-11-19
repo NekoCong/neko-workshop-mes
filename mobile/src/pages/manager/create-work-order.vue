@@ -122,6 +122,12 @@ function formatDate(d: Date): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 }
 
+// 格式化日期时间为 yyyy-MM-dd HH:mm:ss（后端日期字段格式）
+function formatDateTime(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+}
+
 async function handleSubmit() {
   if (!form.workorderName.trim()) {
     uni.showToast({ title: '请输入工单名称', icon: 'none' })
@@ -142,6 +148,8 @@ async function handleSubmit() {
     const code = form.workorderCode.trim() || genWorkOrderCode()
     // 交付日期必填（后端对空字符串日期会解析失败），未选则默认今天+7天
     const requestDate = form.requestDate || formatDate(new Date(Date.now() + 7 * 24 * 3600 * 1000))
+    // 订单日期/投产日期：后端要求非空，默认取当天
+    const today = formatDateTime(new Date())
     await createWorkOrderApi({
       workorderCode: code,
       workorderName: form.workorderName.trim(),
@@ -152,6 +160,8 @@ async function handleSubmit() {
       quantity: Number(form.quantity),
       unitOfMeasure: form.unitOfMeasure,
       clientName: form.clientName,
+      orderDate: today,
+      produceDate: today,
       requestDate,
       remark: form.remark,
       status: 'UNSCHEDULED',
