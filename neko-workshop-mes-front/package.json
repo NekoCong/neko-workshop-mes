@@ -140,6 +140,16 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "pnpm": {
+    "overrides": {
+      "@intlify/shared": "9.2.2",
+      "@intlify/message-compiler": "9.2.2",
+      "vxe-table": "4.6.21",
+      "element-plus": "2.3.8",
+      "@form-create/designer": "3.2.6",
+      "@form-create/element-ui": "3.2.6"
+    }
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
