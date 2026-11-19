@@ -1,0 +1,53 @@
+{
+  "pages": [
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/worker/task-list",
+      "style": {
+        "navigationBarTitleText": "我的任务"
+      }
+    },
+    {
+      "path": "pages/worker/report",
+      "style": {
+        "navigationBarTitleText": "生产报工"
+      }
+    },
+    {
+      "path": "pages/manager/home",
+      "style": {
+        "navigationBarTitleText": "生产管理"
+      }
+    },
+    {
+      "path": "pages/manager/work-order-list",
+      "style": {
+        "navigationBarTitleText": "生产工单"
+      }
+    },
+    {
+      "path": "pages/manager/create-work-order",
+      "style": {
+        "navigationBarTitleText": "新建工单"
+      }
+    },
+    {
+      "path": "pages/manager/task-list",
+      "style": {
+        "navigationBarTitleText": "生产任务"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "灵喵工坊MES",
+    "navigationBarBackgroundColor": "#2d8cf0",
+    "backgroundColor": "#f5f6f8"
+  },
+  "uniIdRouter": {}
+}
