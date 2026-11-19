@@ -46,7 +46,9 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@import "./src/styles/variables.scss";',
+          // vite 8 起 additionalData 里的相对路径按被编译文件所在目录解析，
+          // 这里改用项目内绝对路径，保持原有 @import 语义不变
+          additionalData: `@import "${pathResolve('src/styles/variables.scss').replace(/\\/g, '/')}";`,
           javascriptEnabled: true
         }
       }

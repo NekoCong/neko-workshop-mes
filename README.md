@@ -16,5 +16,5 @@
 
 ## 编译与运行速览
 - 后端需 JDK 25、Maven 3.9+：先 `mvn -f neko-workshop-core/pom.xml install -Dmaven.test.skip=true`，再 `mvn -f neko-workshop-mes-server/pom.xml install -Dmaven.test.skip=true`，然后运行 `NekoWorkshopServerApplication`。
-- 前端需 Node 18+（已在 Node 24.16 验证）、pnpm 7.33.6：在 `neko-workshop-mes-front/` 下 `pnpm install` 后 `pnpm dev`；生产构建 `pnpm build:prod`。依赖版本已在 `package.json` 的 `pnpm.overrides` 中锁定，请勿随意放开。
+- 前端需 Node ≥ 20.19（或 ≥ 22.12，已在 Node 24.16 验证）、pnpm 7.33.6：在 `neko-workshop-mes-front/` 下 `pnpm install` 后 `pnpm dev`；生产构建 `pnpm build:prod`。依赖版本已在 `package.json` 的 `pnpm.overrides` 中锁定，请勿随意放开。
 - 详见 `源码运行说明.md` 与 `neko-workshop-mes-front/代码运行说明.md`。
